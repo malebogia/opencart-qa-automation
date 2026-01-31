@@ -1,4 +1,6 @@
 package frontend;
 
-public class LoginTest {
+import base.BaseTest;
+
+public class LoginTest extends BaseTest {
 }
