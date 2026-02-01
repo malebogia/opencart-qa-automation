@@ -7,11 +7,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 
-public class DriverFactory {
+public class DriverManager {
 
     private static WebDriver driver;
 
     public static WebDriver getDriver(){
+
         if (driver == null){
             String browserType = ConfigReader.getProperty("browser");
 
@@ -26,12 +27,23 @@ public class DriverFactory {
                     driver = new FirefoxDriver();
                     break;
 
+                default:
+                    throw new RuntimeException(
+                            "Unsupported browser type" + browserType
+                    );
+
             }
+            driver.manage().window().maximize();
         }
 
         return driver;
     }
+    
 
-
-
+    public static void quitDriver(){
+        if (driver != null){
+            driver.quit();
+            driver = null;
+        }
+    }
 }
