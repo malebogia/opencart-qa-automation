@@ -1,5 +1,6 @@
 package pages.base;
 
+import org.apache.logging.log4j.LogManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -7,6 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class BasePage {
+
+    protected Logger logger = LogManager.getLogger(this.getClass());
     protected WebDriver driver;
     protected WebDriverWait wait;
 
