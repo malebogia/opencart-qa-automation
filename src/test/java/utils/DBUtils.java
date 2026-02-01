@@ -8,75 +8,72 @@ import java.sql.*;
 
 public class DBUtils {
 
-    private static final Logger logger = LogManager.getLogger(DBUtils.class);
+private static final Logger logger = LogManager.getLogger(DBUtils.class);
+private static Connection connection;
 
-    private static Connection connection;
-    private static Statement statement;
-    private static ResultSet resultSet;
+public static void createConnection(){
+    try{
+        logger.info("Creating database connection...");
 
-    public static void createConnection(){
-        try{
-            logger.info("Creating database connection");
+        connection = DriverManager.getConnection(
+                ConfigReader.getProperty("db.url"),
+                ConfigReader.getProperty("db.user"),
+                ConfigReader.getProperty("db.password")
+        );
 
-            connection = DriverManager.getConnection(
-                    ConfigReader.getProperty("db.url"),
-                    ConfigReader.getProperty("db.user"),
-                    ConfigReader.getProperty("db.password")
-            );
-            logger.info("Database connection established successfully.");
+        logger.info("Database connection established successfully.");
+    } catch (SQLException e){
+        logger.error("Failed to connect to the database", e);
 
-        }catch (SQLException e){
-            logger.error("Failed to connect to the database.", e);
-                       throw new RuntimeException("Failed to connect to the Database", e);
-        }
-
+        throw new RuntimeException("Failed to connect to the database",e);
     }
+}
 
     /**
-     This method runs a query and returns the data (ResultSet)
-     @param query - The SQL command (e.g. SELECT * FROM users)
-     @return A ResultSet object containing the data returned by the database.
+     * Executes a SQL SELECT query and returns a ResultSet.
+     *
+     * IMPORTANT:
+     * - Statement is created locally (thread-safe)
+     * - Errors are logged AND rethrown
+     *
+     * @param query SQL query to execute
+     * @return ResultSet with the query result
      */
 
     public static ResultSet executeQuery(String query){
-        try{
-            if (connection == null) {
-                logger.warn("Database connection is null. Creating new connection");
+
+        try {
+            if (connection == null){
+                logger.warn("Database connection is null. Creating a new connection.");
                 createConnection();
             }
 
             logger.info("Executing SQL query: {}", query);
 
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            Statement statement = connection.createStatement();
 
-            logger.info("Query executed successfully");
-            return resultSet;
-        } catch (SQLException e){
-            logger.error("Query execution failed: {}", query,e);
+            return  statement.executeQuery(query);
+        }catch (SQLException e){
+            logger.error("Query execution failed: {}",query,e);
             throw new RuntimeException("Query execution failed: " + query,e);
         }
     }
 
-    /**
-     * ALWAYS close the connection when finished to avoid memory leaks!
-     */
+
 
     public static void destroy(){
         try{
-            logger.info("Closing database resources...");
+            logger.info("Closing database connection...");
+            if (connection != null){
+                connection.close();
+                connection = null;
+            }
 
-            if (resultSet != null) resultSet.close();
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
-
-            logger.info("Database resources closed successfully");
+            logger.info("Database connection closed successfully");
         }catch (SQLException e){
-            logger.error("Error while closing database resources.",e);
+            logger.error("Error while closing database connection", e);
         }
     }
-
-
 
 
 
