@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 
-public class DriverManager {
+public class DriverFactory {
 
     private static WebDriver driver;
 
