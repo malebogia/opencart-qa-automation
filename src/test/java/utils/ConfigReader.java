@@ -3,6 +3,9 @@ package utils;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+/**
+ * Utility class to read configuration properties.
+ */
 public class ConfigReader {
 
     private static Properties properties;
@@ -10,20 +13,24 @@ public class ConfigReader {
     static {
         try {
             String path = "src/test/resources/config.properties";
-
             FileInputStream input = new FileInputStream(path);
 
             properties = new Properties();
-
             properties.load(input);
             input.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Could not find config.properties file!");
+            throw new RuntimeException("Could not load config.properties file!", e);
         }
     }
 
-    public static String getProperty(String key){
+    /**
+     * Gets the value of a property by key.
+     *
+     * @param key property key
+     * @return property value
+     */
+    public static String getProperty(String key) {
         return properties.getProperty(key);
     }
 }

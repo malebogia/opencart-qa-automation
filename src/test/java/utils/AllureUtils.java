@@ -6,18 +6,18 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Utility class for taking screenshots for Allure reports.
+ * Utility class for attaching screenshots to Allure reports.
  */
-public class ScreenshotUtils {
+public class AllureUtils {
 
     /**
-     * Captures a screenshot and attaches it to Allure report.
+     * Attaches a screenshot to Allure report.
      *
      * @param driver WebDriver instance
      * @return screenshot as byte array
      */
-    @Attachment(value = "Failure screenshot", type = "image/png")
-    public static byte[] takeScreenshot(WebDriver driver) {
+    @Attachment(value = "Screenshot", type = "image/png")
+    public static byte[] attachScreenshot(WebDriver driver) {
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 }

@@ -12,7 +12,14 @@
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+            <allure.results.directory>target/allure-results</allure.results.directory>
+
+
     </properties>
+
+
+
 
 
     <dependencies>
