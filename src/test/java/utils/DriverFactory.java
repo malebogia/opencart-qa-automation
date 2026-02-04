@@ -7,10 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-/**
- * Factory class for managing WebDriver instances.
- * Implements lazy initialization and ensures a single driver instance per test.
- */
+
 public class DriverFactory {
 
     protected Logger logger = LogManager.getLogger(DriverFactory.class);
