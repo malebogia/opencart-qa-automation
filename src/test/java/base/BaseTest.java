@@ -27,8 +27,8 @@ public class BaseTest {
     public void setUp() {
         try {
             logger.info("========== STARTING TEST EXECUTION ==========");
-            driver = DriverFactory.getDriver(); // Get driver from factory
-            webApp = new WebApp(driver);       // Initialize WebApp for page objects
+            driver = DriverFactory.getDriver(); 
+            webApp = new WebApp(driver);       
             logger.info("WebDriver and WebApp initialized successfully");
         } catch (Exception e) {
             logger.error("Failed to initialize test environment", e);
