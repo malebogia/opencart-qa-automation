@@ -10,7 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class DriverFactory {
 
-    protected Logger logger = LogManager.getLogger(DriverFactory.class);
+    private static Logger logger = LogManager.getLogger(DriverFactory.class);
     private static WebDriver driver;
 
     /**
@@ -23,23 +23,28 @@ public class DriverFactory {
 
         if (driver == null) {
             String browserType = ConfigReader.getProperty("browser").toLowerCase();
+               logger.info("Initializing WebDriver for browser: {}", browserType);
 
             switch (browserType) {
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver();
+                     logger.info("ChromeDriver started successfully");
                     break;
 
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();
                     driver = new FirefoxDriver();
+                    logger.info("FirefoxDriver started successfully");
                     break;
 
                 default:
+                    logger.error("Unsupported browser type: {}", browserType);
                     throw new RuntimeException("Unsupported browser type: " + browserType);
             }
 
             driver.manage().window().maximize();
+             logger.info("Browser window maximized");
         }
         return driver;
     }
@@ -49,8 +54,11 @@ public class DriverFactory {
      */
     public static void quitDriver() {
         if (driver != null) {
+            logger.info("Closing WebDriver");
             driver.quit();
             driver = null;
-        }
+            logger.info("WebDriver closed successfully");
+        }else{
+            logger.warn("Driver.quit() called but WebDriver instance was already null");
     }
 }
