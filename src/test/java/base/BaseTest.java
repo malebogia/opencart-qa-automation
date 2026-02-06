@@ -38,26 +38,37 @@ public class BaseTest {
 
 
     @AfterMethod
-    public void tearDown(ITestResult result) {
-        try {
+public void tearDown(ITestResult result) {
 
-            if (result.getStatus() == ITestResult.FAILURE && driver != null) {
-                logger.error("Test {} failed. Capturing screenshot...", result.getName());
-                ScreenshotUtils.takeScreenshot(driver);
-            }
-
-            DriverFactory.quitDriver();
-            logger.info("WebDriver quit successfully");
-
-            logger.info("========== TEST EXECUTION FINISHED ==========");
-        } catch (Exception e) {
-            logger.error("Error during teardown", e);
+    try {
+        // Take screenshot only if test failed
+        if (result.getStatus() == ITestResult.FAILURE && driver != null) {
+            logger.error("Test '{}' failed. Capturing screenshot...", result.getName());
+            ScreenshotUtils.takeScreenshot(driver);
         }
-    }
 
-    @AfterMethod
-    public void tearDown() {
-        logger.info("Test execution finished");
-        DriverFactory.quitDriver(); // Quit driver after test
+        boolean closeBrowser =
+                Boolean.parseBoolean(ConfigReader.getProperty("close.browser"));
+
+        if (closeBrowser) {
+            try {
+                DriverFactory.quitDriver();
+                logger.info("Driver closed successfully");
+            } catch (NoSuchSessionException e) {
+                logger.warn("Browser was already closed manually. Session already invalid.");
+            }
+        } else {
+            logger.warn("Browser left open for debugging purposes");
+            logger.warn("Set close.browser=true to enable automatic browser closing");
+        }
+
+        logger.info("========== TEST EXECUTION FINISHED ==========");
+
+    } catch (Exception e) {
+        logger.error("Error during teardown", e);
     }
 }
+
+    }
+
+
