@@ -29,7 +29,7 @@ public class BasePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
         logger.info("Initialized page: {}", this.getClass().getSimpleName());
-
+        Allure.step("Initialized page: " + this.getClass().getSimpleName());
     }
 
 
@@ -37,14 +37,14 @@ public class BasePage {
     // BASIC ELEMENT CHECKS
     //===============
 
-
+    @Step("Check if element is selected")
     protected boolean isElementSelected(WebElement webElement){
         waitUntilVisible(webElement);
         boolean selected = webElement.isSelected();
         logger.info("Element {} selected: {}",webElement,selected);
         return selected;
     }
-
+    @Step("Check if element is displayed")
     public boolean isElementDisplayed(WebElement element) {
         try {
             waitUntilVisible(element);
@@ -56,7 +56,7 @@ public class BasePage {
             return false;
         }
     }
-
+    @Step("Check if element is present")
     public boolean isElementPresent(By locator) {
         waitUntilPresence(locator);
         boolean present = !driver.findElements(locator).isEmpty();
@@ -68,6 +68,7 @@ public class BasePage {
      * Checks that element does NOT exist in the DOM
      * Useful    for delete validations
      */
+    @Step("Check if element is NOT present")
     public boolean isElementNotPresent(By locator) {
         boolean notPresent = driver.findElements(locator).isEmpty();
         logger.info("Element located by {} not present: {}", locator, notPresent);
@@ -78,19 +79,19 @@ public class BasePage {
     //==================
     // Dropdown Helpers
     //==================
-
+    @Step("Select '{visibleText}' from dropdown")
     protected void selectByVisibleText(WebElement dropdown, String visibleText){
         waitUntilElementClickable(dropdown);
         new Select(dropdown).selectByVisibleText(visibleText);
         logger.info("Selected '{}' in dropdown {}", visibleText, dropdown);
     }
-
+    @Step("Select '{value}' from dropdown")
     protected void selectByValue(WebElement dropdown, String value) {
         waitUntilElementClickable(dropdown);
         new Select(dropdown).selectByValue(value);
         logger.info("Selected value '{}' in dropdown {}", value, dropdown);
     }
-
+    @Step("Select '{index}' from dropdown")
     protected void selectByIndex(WebElement dropdown, int index) {
         waitUntilElementClickable(dropdown);
         new Select(dropdown).selectByIndex(index);
@@ -102,36 +103,43 @@ public class BasePage {
     // COMMON ELEMENT INTERACTIONS
     //===================
 
-
+    @Step("Click on element")
     protected void click(WebElement element) {
-        waitUntilElementClickable(element);
+        scrollIntoView(element);
         element.click();
-        logger.info("Clicked element: {}", element);
+        logger.info("Clicked element");
     }
-
+     @Step("Click on element located by: {locator}")
      protected void click(By locator) {
-        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
-        logger.info("Clicked element using locator: {}", locator);
+       WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+          scrollIntoView(element);
+        element.click();
+        logger.info("Clicked element [{}]", locator);
     }
-
+    
+    @Step("Type text '{text}' into element")
     protected void typeText(WebElement element, String text) {
-        clearText(element);
-        waitUntilVisible(element).sendKeys(text);
-        logger.info("Typed text '{}' into element: {}", text, element);
+          WebElement visibleElement = waitUntilVisible(element);
+        visibleElement.clear();
+        visibleElement.sendKeys(text);
+       logger.info("Typed text '{}'", text);
+
     }
 
-
+    @Step("Clear text from element")
     protected void clearText(WebElement element) {
         waitUntilVisible(element).clear();
         logger.info("Cleared text from element: {}", element);
     }
 
+    @Step("Get text from element")
     protected String getText(WebElement element) {
         String text = waitUntilVisible(element).getText();
-        logger.info("Got text '{}' from element: {}", text, element);
+        logger.info("Got text '{}'", text);
         return text;
     }
 
+    @Step("Find elements using locator {locator}")
     protected List<WebElement> getElements(By locator) {
         waitUntilPresence(locator);
         List<WebElement> elements = driver.findElements(locator);
@@ -168,15 +176,15 @@ public class BasePage {
  // SCROLL HELPERS
  // =================
 
-protected void scrollIntoView(WebElement element) {
-    try {
-        ((JavascriptExecutor) driver)
-                .executeScript("arguments[0].scrollIntoView(true);", element);
-        logger.info("Scrolled element into view");
-    } catch (Exception e) {
-        logger.error("Failed to scroll element into view", e);
+ protected void scrollIntoView(WebElement element) {
+        try {
+            ((JavascriptExecutor) driver)
+                    .executeScript("arguments[0].scrollIntoView({block:'center'});", element);
+            logger.debug("Scrolled element into view");
+        } catch (Exception e) {
+            logger.error("Scroll into view failed", e);
+        }
     }
-}
 
 
 }
