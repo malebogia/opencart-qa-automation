@@ -19,12 +19,13 @@ import utils.ScreenshotUtils;
 @Listeners(TestListener.class)
 public class BaseTest {
 
-    public WebDriver driver;
+    protected WebDriver driver;
     private static final Logger logger = LogManager.getLogger(BaseTest.class);
     protected WebApp webApp;
 
     @BeforeMethod
     public void setUp() {
+        Allure.step("Starting test setup");
         try {
             logger.info("========== STARTING TEST EXECUTION ==========");
             driver = DriverFactory.getDriver(); 
@@ -43,7 +44,11 @@ public void tearDown(ITestResult result) {
     try {
         // Take screenshot only if test failed
         if (result.getStatus() == ITestResult.FAILURE && driver != null) {
+            
+            Allure.step("Test failed. Capturing screenshot");
+            
             logger.error("Test '{}' failed. Capturing screenshot...", result.getName());
+            
             ScreenshotUtils.takeScreenshot(driver);
         }
 
@@ -60,6 +65,7 @@ public void tearDown(ITestResult result) {
         } else {
             logger.warn("Browser left open for debugging purposes");
             logger.warn("Set close.browser=true to enable automatic browser closing");
+            Allure.step("Browser left open for debugging");
         }
 
         logger.info("========== TEST EXECUTION FINISHED ==========");
