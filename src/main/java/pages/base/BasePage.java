@@ -80,7 +80,7 @@ public class BasePage {
     //==================
 
     protected void selectByVisibleText(WebElement dropdown, String visibleText){
-        waitUntilElementClickable(dropdown)
+        waitUntilElementClickable(dropdown);
         new Select(dropdown).selectByVisibleText(visibleText);
         logger.info("Selected '{}' in dropdown {}", visibleText, dropdown);
     }
@@ -109,7 +109,13 @@ public class BasePage {
         logger.info("Clicked element: {}", element);
     }
 
+     protected void click(By locator) {
+        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+        logger.info("Clicked element using locator: {}", locator);
+    }
+
     protected void typeText(WebElement element, String text) {
+        clearText(element);
         waitUntilVisible(element).sendKeys(text);
         logger.info("Typed text '{}' into element: {}", text, element);
     }
@@ -135,7 +141,7 @@ public class BasePage {
 
 
     //===================
-    // HELPER METHODS
+    // WAIT METHODS
     //===================
 
     protected WebElement waitUntilElementClickable(WebElement webElement){
@@ -149,9 +155,28 @@ public class BasePage {
     protected void waitUntilPresence(By locator) {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
+    
+
+    protected void waitUntilInvisible(By locator) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        logger.info("Element {} is now invisible", locator);
+    }
 
 
 
+ // =================
+ // SCROLL HELPERS
+ // =================
+
+protected void scrollIntoView(WebElement element) {
+    try {
+        ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].scrollIntoView(true);", element);
+        logger.info("Scrolled element into view");
+    } catch (Exception e) {
+        logger.error("Failed to scroll element into view", e);
+    }
+}
 
 
 }
