@@ -80,7 +80,7 @@ public class BasePage {
     //==================
 
     protected void selectByVisibleText(WebElement dropdown, String visibleText){
-        waitUntilElementClickable(dropdown)
+        waitUntilElementClickable(dropdown);
         new Select(dropdown).selectByVisibleText(visibleText);
         logger.info("Selected '{}' in dropdown {}", visibleText, dropdown);
     }

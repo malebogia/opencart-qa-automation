@@ -55,9 +55,5 @@ public class BaseTest {
         }
     }
 
-    @AfterMethod
-    public void tearDown() {
-        logger.info("Test execution finished");
-        DriverFactory.quitDriver(); // Quit driver after test
-    }
+
 }

@@ -1,6 +1,16 @@
 package frontend;
 
-public class RegistrationTest {
+import base.BaseTest;
+import org.testng.annotations.Test;
+import pages.base.WebApp;
+
+public class RegistrationTest extends BaseTest {
+
+    @Test
+    public void openPage(){
+        webApp.mainPage().openPage();
+    }
+
 
     /*@Test
 @Test
