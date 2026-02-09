@@ -93,4 +93,15 @@ public class DBUtils {
             logger.error("Error while closing database connection", e);
         }
     }
+
+    /**
+     * Check if user exists by email.
+     */
+    public static boolean isUserExistsByEmail(String email) {
+        String query = "SELECT email FROM oc_customer WHERE email = '" + email + "'";
+
+        List<Map<String, Object>> result = executeQuery(query);
+
+        return !result.isEmpty();
+    }
 }

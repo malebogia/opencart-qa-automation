@@ -1,11 +1,10 @@
 package pages.base;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -38,12 +37,13 @@ public class BasePage {
     //===============
 
     @Step("Check if element is selected")
-    protected boolean isElementSelected(WebElement webElement){
+    protected boolean isElementSelected(WebElement webElement) {
         waitUntilVisible(webElement);
         boolean selected = webElement.isSelected();
-        logger.info("Element {} selected: {}",webElement,selected);
+        logger.info("Element {} selected: {}", webElement, selected);
         return selected;
     }
+
     @Step("Check if element is displayed")
     public boolean isElementDisplayed(WebElement element) {
         try {
@@ -56,11 +56,12 @@ public class BasePage {
             return false;
         }
     }
+
     @Step("Check if element is present")
     public boolean isElementPresent(By locator) {
         waitUntilPresence(locator);
         boolean present = !driver.findElements(locator).isEmpty();
-        logger.info("Element located by {} present: {}",locator,present);
+        logger.info("Element located by {} present: {}", locator, present);
         return present;
     }
 
@@ -80,17 +81,19 @@ public class BasePage {
     // Dropdown Helpers
     //==================
     @Step("Select '{visibleText}' from dropdown")
-    protected void selectByVisibleText(WebElement dropdown, String visibleText){
+    protected void selectByVisibleText(WebElement dropdown, String visibleText) {
         waitUntilElementClickable(dropdown);
         new Select(dropdown).selectByVisibleText(visibleText);
         logger.info("Selected '{}' in dropdown {}", visibleText, dropdown);
     }
+
     @Step("Select '{value}' from dropdown")
     protected void selectByValue(WebElement dropdown, String value) {
         waitUntilElementClickable(dropdown);
         new Select(dropdown).selectByValue(value);
         logger.info("Selected value '{}' in dropdown {}", value, dropdown);
     }
+
     @Step("Select '{index}' from dropdown")
     protected void selectByIndex(WebElement dropdown, int index) {
         waitUntilElementClickable(dropdown);
@@ -105,24 +108,27 @@ public class BasePage {
 
     @Step("Click on element")
     protected void click(WebElement element) {
+        waitUntilElementClickable(element);
         scrollIntoView(element);
         element.click();
         logger.info("Clicked element");
     }
-     @Step("Click on element located by: {locator}")
-     protected void click(By locator) {
-       WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
-          scrollIntoView(element);
+
+    @Step("Click on element located by: {locator}")
+    protected void click(By locator) {
+        waitUntilPresence(locator);
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        scrollIntoView(element);
         element.click();
         logger.info("Clicked element [{}]", locator);
     }
-    
+
     @Step("Type text '{text}' into element")
     protected void typeText(WebElement element, String text) {
-          WebElement visibleElement = waitUntilVisible(element);
+        WebElement visibleElement = waitUntilVisible(element);
         visibleElement.clear();
         visibleElement.sendKeys(text);
-       logger.info("Typed text '{}'", text);
+        logger.info("Typed text '{}'", text);
 
     }
 
@@ -147,12 +153,23 @@ public class BasePage {
         return elements;
     }
 
+    @Step("Ensure checkbox is selected")
+    protected void selectCheckbox(WebElement element) {
+        scrollIntoView(element);
+        waitUntilElementClickable(element);
+        
+        if (!element.isSelected()) {
+            click(element);
+            logger.info("Checkbox is selected");
+        }
+    }
+
 
     //===================
     // WAIT METHODS
     //===================
 
-    protected WebElement waitUntilElementClickable(WebElement webElement){
+    protected WebElement waitUntilElementClickable(WebElement webElement) {
         return wait.until(ExpectedConditions.elementToBeClickable(webElement));
     }
 
@@ -163,7 +180,7 @@ public class BasePage {
     protected void waitUntilPresence(By locator) {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
-    
+
 
     protected void waitUntilInvisible(By locator) {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
@@ -171,12 +188,11 @@ public class BasePage {
     }
 
 
+    // =================
+    // SCROLL HELPERS
+    // =================
 
- // =================
- // SCROLL HELPERS
- // =================
-
- protected void scrollIntoView(WebElement element) {
+    protected void scrollIntoView(WebElement element) {
         try {
             ((JavascriptExecutor) driver)
                     .executeScript("arguments[0].scrollIntoView({block:'center'});", element);

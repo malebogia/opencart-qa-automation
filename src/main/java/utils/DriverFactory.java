@@ -23,13 +23,13 @@ public class DriverFactory {
 
         if (driver == null) {
             String browserType = ConfigReader.getProperty("browser").toLowerCase();
-               logger.info("Initializing WebDriver for browser: {}", browserType);
+            logger.info("Initializing WebDriver for browser: {}", browserType);
 
             switch (browserType) {
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver();
-                     logger.info("ChromeDriver started successfully");
+                    logger.info("ChromeDriver started successfully");
                     break;
 
                 case "firefox":
@@ -44,7 +44,7 @@ public class DriverFactory {
             }
 
             driver.manage().window().maximize();
-             logger.info("Browser window maximized");
+            logger.info("Browser window maximized");
         }
         return driver;
     }
@@ -58,7 +58,9 @@ public class DriverFactory {
             driver.quit();
             driver = null;
             logger.info("WebDriver closed successfully");
-        }else{
+        } else {
             logger.warn("Driver.quit() called but WebDriver instance was already null");
+        }
     }
+
 }

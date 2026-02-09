@@ -1,0 +1,5 @@
+firstName,lastName,email,password,reason
+"",Doe,test@test.com,123456,Empty first name
+John,"",test@test.com,123456,Empty last name
+John,Doe,invalidEmail,123456,Invalid email
+John,Doe,test@test.com,123,Weak password

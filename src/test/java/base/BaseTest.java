@@ -1,14 +1,16 @@
 package base;
 
-import listeners.TestListener;
+import io.qameta.allure.Allure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import pages.base.WebApp;
+import utils.ConfigReader;
 import utils.DriverFactory;
 import utils.ScreenshotUtils;
 
@@ -16,12 +18,17 @@ import utils.ScreenshotUtils;
  * Base test class for all test cases.
  * Handles setup and teardown for WebDriver.
  */
-@Listeners(TestListener.class)
+@Listeners(listeners.TestListener.class)
 public class BaseTest {
 
     protected WebDriver driver;
     private static final Logger logger = LogManager.getLogger(BaseTest.class);
     protected WebApp webApp;
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
 
     @BeforeMethod
     public void setUp() {

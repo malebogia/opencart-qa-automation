@@ -1,6 +1,8 @@
 package listeners;
 
 import base.BaseTest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -22,10 +24,10 @@ public class TestListener implements ITestListener {
         Object instance = result.getInstance();
 
          if (instance instanceof BaseTest) {
-            WebDriver driver = ((BaseTest) instance).driver;
-             
+             WebDriver driver = ((BaseTest) instance).getDriver();
 
-        if (driver != null) {
+
+             if (driver != null) {
                 logger.info("Attaching screenshot to Allure report");
                 AllureUtils.attachScreenshot(driver);
             } else {
