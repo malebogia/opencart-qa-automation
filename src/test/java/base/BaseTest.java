@@ -75,6 +75,8 @@ public void tearDown(ITestResult result) {
             Allure.step("Browser left open for debugging");
         }
 
+        DBUtils.destroy();
+
         logger.info("========== TEST EXECUTION FINISHED ==========");
 
     } catch (Exception e) {
