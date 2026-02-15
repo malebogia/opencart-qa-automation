@@ -1,7 +1,8 @@
 package pages.frontend;
 
-import com.sun.jna.platform.win32.Netapi32Util;
+import ENUMS.FieldNames;
 import io.qameta.allure.Step;
+import models.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -23,25 +24,40 @@ public class RegistrationPage extends BasePage {
 //=======================
 
     @FindBy(id = "input-firstname")
-    WebElement firstNameInput;
+    private WebElement firstNameInput;
 
     @FindBy(id = "input-lastname")
-    WebElement lastNameInput;
+    private WebElement lastNameInput;
 
     @FindBy(id = "input-email")
-    WebElement emailInput;
+    private WebElement emailInput;
 
     @FindBy(id = "input-password")
-    WebElement passwordInput;
+    private WebElement passwordInput;
 
-    @FindBy(id ="input-newsletter")
-    WebElement subscribeCheckBox;
+    @FindBy(id = "input-newsletter")
+    private WebElement subscribeCheckBox;
 
     @FindBy(css = "div.text-end input[type='checkbox']")
-    WebElement agreePrivacyPolicyCheckbox;
+    private WebElement agreePrivacyPolicyCheckbox;
 
     @FindBy(css = "button[type='submit']")
-    WebElement submitButton;
+    private WebElement submitButton;
+
+    @FindBy(id = "alert")
+    private WebElement alert;
+
+    @FindBy(id = "error-firstname")
+    private WebElement firstNameError;
+
+    @FindBy(id = "error-lastname")
+    private WebElement lastNameError;
+
+    @FindBy(id = "error-email")
+    private WebElement emailError;
+
+    @FindBy(id = "error-password")
+    private WebElement passwordError;
 
 
 //===================
@@ -53,23 +69,30 @@ public class RegistrationPage extends BasePage {
     }
 
 
-    private void fillLastName(String lastName){
+    private void fillLastName(String lastName) {
         typeText(lastNameInput, lastName);
     }
 
-    private void fillEmail(String email){
-        typeText(emailInput,email);
+    private void fillEmail(String email) {
+        typeText(emailInput, email);
     }
 
-    private void fillPassword(String password){
-        typeText(passwordInput,password);
+    private void fillPassword(String password) {
+        typeText(passwordInput, password);
     }
 
-    private void selectAgreePrivacyPolicyCheckbox(){
+
+    //This basic action is public and market with @Step and log, because I use in negative DDT test.
+    @Step("Select 'Agree to Privacy Policy' checkbox")
+    public void selectAgreePrivacyPolicyCheckbox() {
+        logger.info("Selecting 'Agree to Privacy Policy' checkbox");
         selectCheckbox(agreePrivacyPolicyCheckbox);
     }
 
-    private void clickConfirmRegistrationButton(){
+    //This basic action is public and market with @Step and log, because I use it in negative DDT test.
+    @Step("Click 'Confirm Registration' button")
+    public void clickConfirmRegistrationButton() {
+        logger.info("Clicking Confirm Registration button");
         click(submitButton);
     }
 
@@ -79,17 +102,46 @@ public class RegistrationPage extends BasePage {
     // =========================
 
     @Step("Register user with email: {user.email}")
-    public void register(data.models.User user ){
+    public void register(User user) {
+
         logger.info("Registering user with email: {}", user.getEmail());
-        typeText(firstNameInput,user.getFirstName());
+        typeText(firstNameInput, user.getFirstName());
         typeText(lastNameInput, user.getLastName());
-        typeText(emailInput,user.getEmail());
+        typeText(emailInput, user.getEmail());
         typeText(passwordInput, user.getPassword());
 
         selectCheckbox(agreePrivacyPolicyCheckbox);
-        selectCheckbox(submitButton);
+        click(submitButton);
     }
 
+    @Step("Get error message for field: {fieldName}")
+    public String getErrorMessage(FieldNames fieldName) {
+
+        logger.info("Retrieving error message for field: {}", fieldName);
+        WebElement element = switch (fieldName) {
+
+            case firstName -> firstNameError;
+            case lastName -> lastNameError;
+            case email -> emailError;
+            case password -> passwordError;
+        };
+
+        return element.getText().trim();
+    }
+
+    @Step("Attempt registration with FirstName: {firstName}, LastName: {lastName}, Email: {email}")
+    public void TryToRegisterInvalidCredentials(String firstName,
+                                                String lastName,
+                                                String email,
+                                                String password) {
+
+        logger.info("Typing registration data for email: {}", email);
+        typeText(firstNameInput, firstName);
+        typeText(lastNameInput, lastName);
+        typeText(emailInput, email);
+        typeText(passwordInput, password);
+
+    }
 
 
 }

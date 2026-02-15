@@ -1,4 +1,4 @@
-package data.models;
+package models;
 
 public class User {
     private String firstName;

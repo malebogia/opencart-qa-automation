@@ -1,6 +1,6 @@
 package data.factories;
 
-import data.models.User;
+import models.User;
 import utils.ConfigReader;
 
 public class UserFactory {
