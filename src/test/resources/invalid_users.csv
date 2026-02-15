@@ -1,5 +1,5 @@
-firstName,lastName,email,password,reason
-"",Doe,test@test.com,123456,Empty first name
-John,"",test@test.com,123456,Empty last name
-John,Doe,invalidEmail,123456,Invalid email
-John,Doe,test@test.com,123,Weak password
+firstName,lastName,email,password,fieldName,expectedMessage
+"",Doe,test@test.com,123456,firstName,First Name must be between 1 and 32 characters!
+John,"",test@test.com,123456,lastName,Last Name must be between 1 and 32 characters!
+John,Doe,invalidEmail@art,123456,email,E-Mail Address does not appear to be valid!
+John,Doe,test@test.com,123,password,Password must be between 4 and 20 characters!

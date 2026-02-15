@@ -13,6 +13,7 @@ import pages.base.WebApp;
 import utils.ConfigReader;
 import utils.DriverFactory;
 import utils.ScreenshotUtils;
+import utils.DBUtils;
 
 /**
  * Base test class for all test cases.
