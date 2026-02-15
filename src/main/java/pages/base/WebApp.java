@@ -1,6 +1,7 @@
 package pages.base;
 
 import org.openqa.selenium.WebDriver;
+import pages.frontend.DashBoardPage;
 import pages.frontend.LoginPage;
 import pages.frontend.MainPage;
 import pages.frontend.RegistrationPage;
@@ -15,6 +16,7 @@ public class WebApp {
     private LoginPage loginPage;
     private MainPage mainPage;
     private RegistrationPage registrationPage;
+    private DashBoardPage dashBoardPage;
 
     public WebApp(WebDriver driver) {
         this.driver = driver;
@@ -40,6 +42,13 @@ public class WebApp {
             registrationPage = new RegistrationPage(driver);
         }
         return registrationPage;
+    }
+
+    public DashBoardPage dashBoardPage(){
+        if (dashBoardPage == null){
+            dashBoardPage = new DashBoardPage(driver);
+        }
+        return dashBoardPage;
     }
 
 }
