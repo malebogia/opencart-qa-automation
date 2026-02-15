@@ -71,5 +71,15 @@ public class MainPage extends BasePage {
         clickRegisterButton();
     }
 
+    @Step("Navigate to Login page")
+    public void navigateToLoginPage() {
+        openMainPage();
+        logger.info("Transition from mainPage to Login page");
+        clickMyAccountButton();
+        click(loginButton);
+    }
+
+
+
 
 }
